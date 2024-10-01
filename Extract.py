@@ -42,4 +42,4 @@ if response.status_code == 200:
         print("Aucun vol trouvé pour cet avion.")
 else:
     print(f"Erreur lors de la requête API : {response.status_code}")
-    print("Message d'erreur :", response.text)  # Imprime le message d'erreur pour débogage
+    print("Message d'erreur :", response.text)  # Imprime le message d'erreur pour débogag
