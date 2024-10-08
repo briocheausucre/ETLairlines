@@ -1,6 +1,6 @@
 import pandas as pd
 
-class AicraftsExtractor():
+class AircraftsExtractor():
     def __init__(self, to_csv=True, update=False):
         self.df = self.get_data(update)
         self.icaos = self.df['icao24'].unique().tolist()
@@ -14,9 +14,19 @@ class AicraftsExtractor():
         else:
             aircrafts = pd.read_csv('Data/aircrafts.csv')
         return aircrafts
+    
+    def transform(self, icaos):
+        df = self.df[self.df['icao24'].isin(icaos)]
+        df = df[['icao24', 'model', 'operator', 'operatorcallsign']]
+        df['operator'] = df.apply(
+        lambda row: row['operatorcallsign'] if row['operatorcallsign'] is not None 
+        else row['operator'], axis=1
+        )
+        self.df = df.drop(columns=['operatorcallsign'])
+        self.icaos = icaos
 
-    def to_csv(self):
-        self.df.to_csv('Data/aircrafts.csv', index=False)
+    def to_csv(self, path='Data/aircrafts.csv'):
+        self.df.to_csv(path, index=False)
 
     def to_database(self):
         '''

@@ -1,44 +1,20 @@
 from opensky_api import OpenSkyApi
 from datetime import datetime, timedelta
 import requests
+import pandas as pd
 
 
 api = OpenSkyApi()
-start_timestamp = int((datetime.now() - timedelta(days=30)).timestamp())
+start_timestamp = int((datetime.now() - timedelta(hours=2)).timestamp())
 end_timestamp = int(datetime.now().timestamp())
-
-username = 'Hippolyte'
-password = 'dyqXex-tajwij-fuzpa7'
-#data = api.get_flights_by_aircraft('3c675a', start_timestamp, end_timestamp)
-#print(data)
-icao = '3c675a'
-url = f"https://opensky-network.org/api/flights/aircraft?icao24={icao}&begin={start_timestamp}&end={end_timestamp}"
-#response = requests.get(url, auth=(username, password))
-#if response.status_code != 429:
-#    data = response.json()
-#else:
-#    print("error")
-#for flight in data:
+#flights = api.get_flights_from_interval(start_timestamp, end_timestamp)
+#for flight in flights:
 #    print(flight)
 
 
-flight_data = {
-    'arrivalAirportCandidatesCount': 0,
-    'callsign': 'LNK621D ',
-    'departureAirportCandidatesCount': 22,
-    'estArrivalAirport': 'FASX',
-    'estArrivalAirportHorizDistance': 4145,
-    'estArrivalAirportVertDistance': 6886,
-    'estDepartureAirport': 'FACT',
-    'estDepartureAirportHorizDistance': 2256,
-    'estDepartureAirportVertDistance': 30,
-    'firstSeen': 1728365085,
-    'icao24': '008081',
-    'lastSeen': 1728366165
-}
+df1 = pd.read_csv('Data/flights.csv')
 
-# Accéder à la valeur associée à la clé 'icao24'
-icao24_value = flight_data['icao24']
+df2 = pd.read_csv('Data/aircrafts.csv')
 
-# Afficher la valeur
-print(icao24_value)
+result = df1[df1['icao'].isin(df2['icao24'])]
+print(result)
