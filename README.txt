@@ -1,5 +1,5 @@
 SDD project on ETL a pipeline
-
+`http.proxyPort`
 `script.py` is the main script. for now, it extracts and transforms the data, need to compute the functions for loading. Leverages the two following files:
 
 `extract_aircrafts.py` defines a class that extracts the aicrafts data, containing ICAOs and the corresponding airline for each aircraft. The dataset is either stored in a csv or stored as an attribute of the class, before being loaded to a SQL database.
