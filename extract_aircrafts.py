@@ -17,7 +17,7 @@ class AircraftsExtractor():
     
     def transform(self, icaos):
         df = self.df[self.df['icao24'].isin(icaos)]
-        df = df[['icao24', 'model', 'operator', 'operatorcallsign']]
+        df = df[['icao24', 'model', 'operator', 'operatorcallsign', 'CO2perkm']]
         df['operator'] = df.apply(
         lambda row: row['operatorcallsign'] if row['operatorcallsign'] is not None 
         else row['operator'], axis=1

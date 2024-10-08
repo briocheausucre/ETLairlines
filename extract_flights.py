@@ -64,12 +64,9 @@ class FlightsExtractor():
     
     def _get_data(self, flight):
         hor_dist_dep = flight.estDepartureAirportHorizDistance
-        ver_dist_dep = flight.estDepartureAirportVertDistance
-        hor_dist_arv = flight.estArrivalAirportVertDistance
-        ver_dist_arv = flight.estArrivalAirportVertDistance
         dep_time = flight.firstSeen
         arv_time = flight.lastSeen
-        return np.sqrt((hor_dist_dep - hor_dist_arv)**2 + (ver_dist_dep - ver_dist_arv)**2), arv_time - dep_time
+        return hor_dist_dep, arv_time - dep_time
     
     def _are_airports_valid(self, flight):
         dep_airport = flight.estDepartureAirport
@@ -77,9 +74,10 @@ class FlightsExtractor():
             return False
         return True
     
-    def transform(self, icaos):
+    def transform(self, icaos, CO2perkm):
         self.df = self.df[self.df['icao'].isin(icaos)]
         self.icaos = self.df['icao'].unique().tolist()
+        self.df['kgCO2'] = (self.df['totaldist'] / 1000 + 95) * CO2perkm
 
     def to_csv(self):
         self.df.to_csv('Data/flights.csv', index=False)
@@ -89,8 +87,3 @@ class FlightsExtractor():
         Uploads the flights dataset to the SQL online database
         '''
         pass
-
-
-if __name__ == '__main__':
-    ae = FlightsExtractor(['3c675a'])
-    print(ae.df.head())
