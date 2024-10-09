@@ -75,7 +75,7 @@ class FlightsExtractor():
         return True
     
     def transform(self, icaos, CO2perkm):
-        self.df = self.df[self.df['icao'].isin(icaos)]
+        self.df = self.df[self.df['icao'].isin(icaos)].reset_index(drop=True)
         self.icaos = self.df['icao'].unique().tolist()
         self.df['kgCO2'] = (self.df['totaldist'] / 1000 + 95) * CO2perkm
 
