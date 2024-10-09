@@ -35,8 +35,6 @@ if 1 == 2:
                                         3) if isinstance(x, str) else 3)
     
 
-df2.to_csv('Data/aircrafts.csv', index=False)
-
 #for index, row in df2.iterrows():
 #    model_type = row['model']
 #    if not isinstance(model_type, str):
