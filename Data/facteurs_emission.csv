@@ -1,5 +1,5 @@
 Date, Distance min (km), Distance max (km), Sièges, Trainées, Facteur, Unité;
-2018, 0, 500, 50, SANS, 40.3, kgCO2e/km;
+2018, 0, 500, 50, SANS, 14.4, kgCO2e/km;
 2018, 0, 500, 50, AVEC, 26.35, kgCO2e/km;
 2018, 0, 500, 100, SANS, 24.1, kgCO2e/km;
 2018, 0, 500, 100, AVEC, 44.1, kgCO2e/km;
