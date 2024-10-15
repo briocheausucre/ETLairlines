@@ -1,4 +1,6 @@
 import pandas as pd
+from sqlalchemy import create_engine
+import psycopg2
 
 class AircraftsExtractor():
     def __init__(self, to_csv=True, update=False):
@@ -45,4 +47,14 @@ class AircraftsExtractor():
         '''
         Uploads the aircrafts dataset to the SQL online database
         '''
-        pass
+        table_name = 'flights'
+        db_url = 'postgresql://astel:Lexanahoj1972!@localhost:5432/airlife'
+        engine = create_engine(db_url)
+        with engine.connect() as connection:
+            try:
+                self.df.to_sql(table_name, con=connection, if_exists='append', index=False)
+                print(f"Data loaded successfully into {table_name}")
+            except Exception as e:
+                print(f"Error loading data: {e}")
+            finally:
+                connection.close()

@@ -13,6 +13,8 @@ if __name__ == "__main__":
     aircrafts_extractor.to_database()
     flights_extractor.to_database()
 
-    print(flights_extractor.df)
-    print(aircrafts_extractor.df)
+    #print(flights_extractor.df)
+    #print(aircrafts_extractor.df)
+
+
 
