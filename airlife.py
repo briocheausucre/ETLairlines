@@ -25,7 +25,7 @@ if __name__ == "__main__":
         query = """
             SELECT SUM(f.kgCO2) as total_co2
             FROM aircrafts a
-            JOIN flights f ON a.icao = f.icao
+            JOIN flights f ON a.icao24 = f.icao
             WHERE a.operator = :operator
         """
         
