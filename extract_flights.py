@@ -3,6 +3,8 @@ from datetime import datetime, timedelta
 import requests
 import numpy as np
 import pandas as pd
+from sqlalchemy import create_engine
+import psycopg2
 
 
 class FlightsExtractor():
@@ -10,10 +12,8 @@ class FlightsExtractor():
         self.api = OpenSkyApi()
         self.username = 'Hippolyte'
         self.password = 'dyqXex-tajwij-fuzpa7'
-        if from_icao:
-            self.start_timestamp = int((datetime.now() - timedelta(days=30)).timestamp())
-        else:
-            self.start_timestamp = int((datetime.now() - timedelta(hours=2)).timestamp())
+        self.start_timestamp30d = int((datetime.now() - timedelta(days=30)).timestamp())
+        self.start_timestamp2hr = int((datetime.now() - timedelta(hours=2)).timestamp())
         self.end_timestamp = int(datetime.now().timestamp())
         if update:
             if from_icao:
@@ -31,7 +31,7 @@ class FlightsExtractor():
         df = pd.DataFrame(columns=['icao','totaldist','totaltime'])
         if icaos == None:
             icaos = []
-            flights = self.api.get_flights_from_interval(self.start_timestamp, self.end_timestamp)
+            flights = self.api.get_flights_from_interval(self.start_timestamp2hr, self.end_timestamp)
             if flights != None:
                 total_distance = 0
                 total_flighttime = 0
@@ -46,7 +46,7 @@ class FlightsExtractor():
                         df.loc[len(df)] = new_row
         else:
             for icao in icaos:
-                url = f"https://opensky-network.org/api/flights/aircraft?icao24={icao}&begin={self.start_timestamp}&end={self.end_timestamp}"
+                url = f"https://opensky-network.org/api/flights/aircraft?icao24={icao}&begin={self.start_timestamp30d}&end={self.end_timestamp}"
                 response = requests.get(url, auth=(self.username, self.password))
                 if response.status_code != 429:
                     flights = response.json()
@@ -86,4 +86,14 @@ class FlightsExtractor():
         '''
         Uploads the flights dataset to the SQL online database
         '''
-        pass
+        table_name = 'flights'
+        db_url = 'postgresql://astel:Lexanahoj1972!@localhost:5432/airlife'
+        engine = create_engine(db_url)
+        with engine.connect() as connection:
+            try:
+                self.df.to_sql(table_name, con=connection, if_exists='append', index=False)
+                print(f"Data loaded successfully into {table_name}")
+            except Exception as e:
+                print(f"Error loading data: {e}")
+            finally:
+                connection.close()
