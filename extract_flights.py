@@ -81,12 +81,11 @@ class FlightsExtractor():
     def to_csv(self):
         self.df.to_csv('Data/flights.csv', index=False)
 
-    def to_database(self):
+    def to_database(self, db_url):
         '''
         Uploads the flights dataset to the SQL online database
         '''
         table_name = 'flights'
-        db_url = 'postgresql://astel:Lexanahoj1972!@localhost:5432/airlife'
         engine = create_engine(db_url)
         with engine.connect() as connection:
             try:
