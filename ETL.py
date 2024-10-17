@@ -10,8 +10,9 @@ if __name__ == "__main__":
     flights_extractor.transform(aircrafts_extractor.icaos, aircrafts_extractor.df['CO2perkm'])
     aircrafts_extractor.transform(flights_extractor.icaos)
 
-    aircrafts_extractor.to_database()
-    flights_extractor.to_database()
+    db_url = 'postgresql://astel:Lexanahoj1972!@localhost:5432/airlife'
+    aircrafts_extractor.to_database(db_url)
+    flights_extractor.to_database(db_url)
 
     #print(flights_extractor.df)
     #print(aircrafts_extractor.df)
