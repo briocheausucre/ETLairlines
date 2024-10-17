@@ -1,4 +1,3 @@
-from opensky_api import OpenSkyApi
 from datetime import datetime, timedelta
 import requests
 import numpy as np
@@ -9,7 +8,7 @@ import psycopg2
 
 class FlightsExtractor():
     def __init__(self, icaos, to_csv=True, update=True, from_icao=False):
-        self.api = OpenSkyApi()
+        #self.api = OpenSkyApi()
         self.username = 'Hippolyte'
         self.password = 'dyqXex-tajwij-fuzpa7'
         self.start_timestamp30d = int((datetime.now() - timedelta(days=30)).timestamp())

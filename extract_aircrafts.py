@@ -47,7 +47,7 @@ class AircraftsExtractor():
         '''
         Uploads the aircrafts dataset to the SQL online database
         '''
-        table_name = 'flights'
+        table_name = 'aircrafts'
         db_url = 'postgresql://astel:Lexanahoj1972!@localhost:5432/airlife'
         engine = create_engine(db_url)
         with engine.connect() as connection:

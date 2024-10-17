@@ -11,7 +11,7 @@ if __name__ == "__main__":
         """Récupérer la liste unique des compagnies aériennes."""
         query = "SELECT DISTINCT operator FROM aircrafts"
         with engine.connect() as conn:
-            result = conn.execute(text(query))
+            result = conn.execute(text(query)).mappings() 
             airlines = [row['operator'] for row in result]
         return airlines
 
@@ -23,14 +23,14 @@ if __name__ == "__main__":
             return
         
         query = """
-            SELECT SUM(f.kgCO2) as total_co2
+            SELECT SUM("kgCO2") as total_co2
             FROM aircrafts a
             JOIN flights f ON a.icao24 = f.icao
             WHERE a.operator = :operator
         """
         
         with engine.connect() as conn:
-            result = conn.execute(text(query), {'operator': selected_airline}).fetchone()
+            result = conn.execute(text(query), {'operator': selected_airline}).mappings().fetchone()
             total_co2 = result['total_co2'] if result['total_co2'] else 0
         
         messagebox.showinfo("CO2 Emissions", f"Total CO2 emissions for {selected_airline}: {total_co2} kg")
