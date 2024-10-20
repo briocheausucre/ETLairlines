@@ -10,6 +10,17 @@ class AircraftsExtractor():
             self.to_csv()
 
     def get_data(self, update):
+        """
+        Récupère le dataset "aircrafts" (extract), contenant la liste de tous les aéronèfs en circulation.
+
+        Paramètres:
+        update (bool): si "True", récupère le dataset, mis à jour via l'API OpenSky.
+        si "False", récupère le dataset d'un fichier csv enregistré localement (enregistré dans Data
+        si le paramètre "to_csv" est "True" lors d'une instanciation de cette classe)
+
+        Retourne:
+        Dataset "aircrafts".
+        """
         if update:
             aircrafts = pd.read_csv('https://opensky-network.org/datasets/metadata/aircraftDatabase.csv')
             aircrafts = aircrafts[aircrafts['manufacturername'].isin(['Airbus', 'Boeing'])]    
@@ -31,6 +42,17 @@ class AircraftsExtractor():
         return aircrafts
     
     def transform(self, icaos):
+        """
+        Transformation finale du dataset pour que son format soit celui exigé par l'application, pour loading 
+        en SQL. 
+        En particulier, ne garde que les colonnes utiles à l'application: icao, modèle de l'avion, compagnie 
+        aérienne, consommation de CO2 moyenne par km.
+
+        Paramètres:
+        icaos (list): liste des icaos à garder dans le dataframe "aircrafts". Ces icaos sont censés être ceux
+        du dataframe "flights".
+        """
+
         df = self.df[self.df['icao24'].isin(icaos)].reset_index(drop=True)
         df = df[['icao24', 'model', 'operator', 'operatorcallsign', 'CO2perkm']]
         df['operator'] = df.apply(
@@ -41,12 +63,21 @@ class AircraftsExtractor():
         self.icaos = icaos
 
     def to_csv(self, path='Data/aircrafts.csv'):
+        """
+        Enregistre le dataframe dans un csv.
+
+        Paramètres:
+        path (str): chemin d'enregistrement.
+        """
         self.df.to_csv(path, index=False)
 
     def to_database(self, db_url):
-        '''
-        Uploads the aircrafts dataset to the SQL online database
-        '''
+        """
+        Upload le dataframe "aircrafts" dans la base de données PostgreSQL spcifiée.
+
+        Paramètres:
+        db_url (str): URL de la base de données où le dataset sera stocké.
+        """
         table_name = 'aircrafts'
         engine = create_engine(db_url)
         with engine.connect() as connection:
