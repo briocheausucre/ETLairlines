@@ -3,6 +3,18 @@ from sqlalchemy import create_engine
 import psycopg2
 
 class AircraftsExtractor():
+    """
+        Classe pour extraire, transformer et load le dataset "aircrafts".
+
+        Paramètres:
+
+        to_csv (bool): si True, enregistre le dataset dans un fichier csv local après extraction des
+        données.
+
+        update (bool): si True, récupère le dataset, mis à jour via l'API OpenSky.
+        si "False", récupère le dataset d'un fichier csv enregistré localement (enregistré dans Data
+        si le paramètre "to_csv" est "True" lors d'une instanciation de cette classe)
+        """
     def __init__(self, to_csv=True, update=False):
         self.df = self.get_data(update)
         self.icaos = self.df['icao24'].unique().tolist()
