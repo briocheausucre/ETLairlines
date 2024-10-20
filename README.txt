@@ -2,9 +2,9 @@ SDD project on ETL a pipeline.
 
 - `airlife.py` is a script to show and play with the little graphical interface we made. It has to be launched after `ETL.py`.
 
-- `ETL.py` is the main script, that has to be launched first. For now, it extracts and transforms the data, and needs to compute the functions for loading. Leverages the two following files:
+- `ETL.py` is the main script, that has to be launched first. Extracts, transforms and loads the data. Leverages the two following files:
 
-- `extract_aircrafts.py` defines a class that extracts the aicrafts data, containing ICAOs and the corresponding airline for each aircraft. The dataset is either stored in a csv or stored as an attribute of the class, before being loaded to a SQL database.
+- `extract_aircrafts.py` defines a class that extracts the aicrafts data, containing ICAOs and the corresponding airline and CO2 consumption per km (among other features) for each aircraft. The dataset is either stored in a csv or stored as an attribute of the class, before being loaded to a SQL database.
 
 - `extract_flights.py` defines a class that extracts all the flights (if available) corresponding to each ICAO. Could extract data for the last 30 days with the required authorizations, but is now available only for the flights from 2 hours ago at most. The class transforms the data by calculating for each ICAO the distance flown and time fown. Next step is to evaluate the total CO2 emitted per ICAO in the given timeframe. A new dataset is made with these three variables (distance flown, time flown, CO2 emitted). The dataset is either stored in a csv or stored as an attribute of the class, before being loaded to a SQL database.
 
