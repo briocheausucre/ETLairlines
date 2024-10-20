@@ -8,7 +8,7 @@ if __name__ == "__main__":
     engine = create_engine(db_url)
 
     def get_airlines():
-        """Récupérer la liste unique des compagnies aériennes."""
+        """Récupère la liste unique des compagnies aériennes."""
         query = "SELECT DISTINCT operator FROM aircrafts WHERE operator IS NOT NULL"
         with engine.connect() as conn:
             result = conn.execute(text(query)).mappings() 
@@ -16,7 +16,7 @@ if __name__ == "__main__":
         return airlines
 
     def evaluate_co2_emissions():
-        """Évaluer et afficher les émissions de CO2 pour la compagnie sélectionnée."""
+        """Évalue et affiche les émissions de CO2 pour la compagnie sélectionnée."""
         selected_airline = airline_var.get()
         if selected_airline == "Select an airline":
             messagebox.showwarning("Attention", "Select an airline")
@@ -37,22 +37,25 @@ if __name__ == "__main__":
         messagebox.showinfo("CO2 Emissions", f"Total CO2 emissions for {selected_airline}: {total_co2} kg")
 
     def close_application():
-        """Fermer l'application."""
+        """Ferme l'interface."""
         root.quit()
 
+    # Interface
     root = tk.Tk()
     root.title("Airline CO2 Emissions Evaluator")
-    
     airline_var = tk.StringVar()
     airline_var.set("Select an airline")
     airlines = get_airlines()
 
+    # Menu déroulant pour sélectionner la compagnie aérienne
     dropdown = tk.OptionMenu(root, airline_var, *airlines)
     dropdown.pack(pady=10)
 
+    # Bouton pour évaluer les émissions de CO2 grâce à une requête SQL
     evaluate_button = tk.Button(root, text="Evaluate past CO2 emissions", command=evaluate_co2_emissions)
     evaluate_button.pack(pady=10)
 
+    # Bouton pour fermer l'application
     exit_button = tk.Button(root, text="Exit", command=close_application)
     exit_button.pack(pady=10)
 
