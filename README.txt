@@ -17,4 +17,5 @@ The created functions in both classes enable either downloading the data from th
 
 - To be able to re-create our tables, one has to create an empty database, and then adapt the db_url variable in the code `ETL.py` and in the code `airlife.py`:
     - Create a local database in a local server (we used Postgres.app to host a local PostgreSQL 17 server, in which we created  a database named "airlife")
+
     - At line 13 in `ETL.py` and line 7 in `airlife.py`, there is a variable db_url, set to 'postgresql://<username>:<password>@localhost:5432/<database_name>'. One has to replace <username> by its PostgreSQL username, <password> by its PostgreSQL password and <database_name> by the name of the local database. One has also to check if the port of the local server is correctly set-up (here, it's 5432).
