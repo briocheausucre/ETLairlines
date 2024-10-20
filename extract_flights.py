@@ -1,3 +1,4 @@
+from opensky_api import OpenSkyApi
 from datetime import datetime, timedelta
 import requests
 import numpy as np
@@ -8,7 +9,7 @@ import psycopg2
 
 class FlightsExtractor():
     def __init__(self, icaos, to_csv=True, update=True, from_icao=False):
-        #self.api = OpenSkyApi()
+        self.api = OpenSkyApi()
         self.username = 'Hippolyte'
         self.password = 'dyqXex-tajwij-fuzpa7'
         self.start_timestamp30d = int((datetime.now() - timedelta(days=30)).timestamp())
@@ -73,10 +74,12 @@ class FlightsExtractor():
             return False
         return True
     
-    def transform(self, icaos, CO2perkm):
-        self.df = self.df[self.df['icao'].isin(icaos)].reset_index(drop=True)
+    def transform(self, icaos, aircrafts):
+        self.df = self.df[self.df['icao'].isin(icaos)]
         self.icaos = self.df['icao'].unique().tolist()
-        self.df['kgCO2'] = (self.df['totaldist'] / 1000 + 95) * CO2perkm
+        merged_df = self.df.merge(aircrafts[['icao24', 'CO2perkm']], left_on='icao', right_on='icao24')
+        merged_df['kgCO2'] = (merged_df['totaldist'] / 1000 + 95) * merged_df['CO2perkm']
+        self.df = merged_df.drop(columns=['icao24', 'CO2perkm'])
 
     def to_csv(self):
         self.df.to_csv('Data/flights.csv', index=False)
@@ -89,7 +92,7 @@ class FlightsExtractor():
         engine = create_engine(db_url)
         with engine.connect() as connection:
             try:
-                self.df.to_sql(table_name, con=connection, if_exists='append', index=False)
+                self.df.to_sql(table_name, con=connection, if_exists='replace', index=False)
                 print(f"Data loaded successfully into {table_name}")
             except Exception as e:
                 print(f"Error loading data: {e}")

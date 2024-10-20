@@ -51,7 +51,7 @@ class AircraftsExtractor():
         engine = create_engine(db_url)
         with engine.connect() as connection:
             try:
-                self.df.to_sql(table_name, con=connection, if_exists='append', index=False)
+                self.df.to_sql(table_name, con=connection, if_exists='replace', index=False)
                 print(f"Data loaded successfully into {table_name}")
             except Exception as e:
                 print(f"Error loading data: {e}")
